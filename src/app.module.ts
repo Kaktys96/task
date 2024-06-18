@@ -3,10 +3,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import {ConfigModule, ConfigService} from '@nestjs/config'
 import {TypeOrmModule} from "@nestjs/typeorm";
-import { LeadModule } from './lead/lead.module';
+import {LeadsModule} from './lead/lead.module';
 
 @Module({
-  imports: [LeadModule,
+  imports: [LeadsModule,
     ConfigModule.forRoot({isGlobal:true}),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -17,7 +17,7 @@ import { LeadModule } from './lead/lead.module';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        synchronize: true,
+        synchronize: false,
         entities: [__dirname + '/**/*.entities{.js, .ts}'],
       }),
       inject: [ConfigService],
@@ -25,7 +25,7 @@ import { LeadModule } from './lead/lead.module';
 
 
     ),
-    LeadModule
+
   ],
 
   controllers: [AppController],
