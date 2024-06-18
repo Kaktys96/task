@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {DeepPartial, Repository} from 'typeorm';
 import { Lead } from './entities/lead.entity';
 import { Contact } from './entities/contact.entity';
-import {CreateLeadDto} from "./dto/create-lead.dto";
+import {CreateContactDto, CreateLeadDto} from "./dto/create-lead.dto";
 
 
 @Injectable()
@@ -37,27 +37,25 @@ export class LeadsService {
     return leads;
   }
 
-    async create(createLeadDto: CreateLeadDto): Promise<Lead> {
-        const leadData: DeepPartial<Lead> = {
-            name: createLeadDto.name,
-            Budget: parseInt(createLeadDto.Budget), // Преобразуйте строку в число
-            Status: createLeadDto.Status,
-            Responsible: createLeadDto.Responsible,
-            contacts: [], // Создайте пустой массив contacts
-        };
-        const lead = this.leadRepository.create(leadData);
+    async create(createLeadDto: CreateLeadDto, createContactDto: CreateContactDto): Promise<Lead> {
+        const lead = new Lead();
+        lead.name = createLeadDto.name;
+        lead.Budget = parseFloat(createLeadDto.Budget.replace(',', '.')) || 0;
+        lead.Status = createLeadDto.Status;
+        lead.Responsible = createLeadDto.Responsible;
 
-        // Создание контактов и связь с лидом
-        for (const contactDto of createLeadDto.contacts) {
-            const contact = this.contactRepository.create(contactDto);
-            contact.lead = lead;
-            await this.contactRepository.save(contact);
-            leadData.contacts.push(contact);  // Добавьте контакт в массив contacts
-        }
+        // Создаем и заполняем контакты
+        lead.contacts = createLeadDto.contacts.map((contactDto: CreateContactDto) => {
+            const contact = new Contact();
+            contact.name = contactDto.name;
+            contact.email = contactDto.email;
+            contact.phone = contactDto.phone;
+            return contact;
+        });
 
-        await this.leadRepository.save(lead);
-      return lead;
+        return this.leadRepository.save(lead);
+    }
   }
 
 
-}
+

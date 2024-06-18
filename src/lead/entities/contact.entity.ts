@@ -15,7 +15,7 @@ export class Contact {
     @Column()
     phone: string;
 
-    @ManyToOne(() => Lead, lead => lead.contacts, { cascade: true })
+    @ManyToOne(() => Lead, lead => lead.contacts,)
     @JoinColumn()
     lead: Lead;
 }

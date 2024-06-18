@@ -17,8 +17,8 @@ import {LeadsModule} from './lead/lead.module';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        synchronize: false,
-        entities: [__dirname + '/**/*.entities{.js, .ts}'],
+        synchronize: true,
+        entities: [__dirname + '/**/*.entity{.js, .ts}'],
       }),
       inject: [ConfigService],
         }

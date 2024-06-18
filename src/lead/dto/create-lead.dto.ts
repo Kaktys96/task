@@ -31,6 +31,6 @@ export class CreateContactDto {
     email: string;
 
     @IsNotEmpty()
-    @IsPhoneNumber('RU') // Замените 'RU' на код страны, если нужно
+    @IsPhoneNumber('RU')
     phone: string;
 }
